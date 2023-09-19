@@ -2,6 +2,8 @@ const express = require("express");
 const User = require("../models/User");
 const router = express.Router();
 const { body, validationResult } = require("express-validator");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 
 //create the user using -POST-- "api/auth/createuser". No login required.
 router.post(
@@ -21,18 +23,26 @@ router.post(
     //check user with this email is exist or not.
     try {
       let user = await User.findOne({ email: req.body.email });
-      console.log(user);
+      // console.log(user);
       if (user) {
         return res
           .status(400)
           .json({ error: "Sorry, This email already exist" });
       }
+      const salt = await bcrypt.genSalt(10);
+      const securedPass = await bcrypt.hash(req.body.password, salt);
       user = await User.create({
         name: req.body.name,
         email: req.body.email,
-        password: req.body.password,
+        password: securedPass,
       });
-      res.json(user);
+      const data = {
+        user: {
+          id: user.id,
+        },
+      };
+      const authToken = jwt.sign(data, "IamTHE$007");
+      res.json({authToken});
     } catch (e) {
       console.error(e.message);
       res.status(500).send("Some Error occured");
