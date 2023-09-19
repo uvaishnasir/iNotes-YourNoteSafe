@@ -5,6 +5,7 @@ const { body, validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
+// Route 1
 //create the user using -POST-- "api/auth/createuser". No login required.
 router.post(
   "/createuser",
@@ -42,10 +43,51 @@ router.post(
         },
       };
       const authToken = jwt.sign(data, "IamTHE$007");
-      res.json({authToken});
+      res.json({ authToken });
     } catch (e) {
       console.error(e.message);
-      res.status(500).send("Some Error occured");
+      res.status(500).send("Internal Server Error");
+    }
+  }
+);
+
+// Route 2
+//login the user using -POST-- "api/auth/login".
+router.post(
+  "/login",
+  [
+    body("email", "Enter a valid email").isEmail(),
+    body("password", "Password cannot be blank").exists(),
+  ],
+  async (req, res) => {
+    const errors = validationResult(req); //if errors-> return bad request.
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    const { email, password } = req.body;
+    try {
+      let user = await User.findOne({ email });
+      if (!user) {
+        return res
+          .status(400)
+          .json({ error: "Please login with correct credentials" });
+      }
+      const passCompare = await bcrypt.compare(password, user.password);
+      if (!passCompare) {
+        return res
+          .status(400)
+          .json({ error: "Please login with correct credentials" });
+      }
+      const data = {
+        user: {
+          id: user.id,
+        },
+      };
+      const authToken = jwt.sign(data, "IamTHE$007");
+      res.json({ authToken });
+    } catch (e) {
+      console.error(e.message);
+      res.status(500).send("Internal Server Error");
     }
   }
 );
