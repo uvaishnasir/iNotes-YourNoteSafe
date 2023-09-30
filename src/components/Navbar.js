@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 const Navbar = () => {
+  let location = useLocation();
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
       <Link className="navbar-brand" to="/">
@@ -19,12 +21,18 @@ const Navbar = () => {
       </button>
       <div className="collapse navbar-collapse" id="navbarSupportedContent">
         <ul className="navbar-nav mr-auto">
-          <li className="nav-item active">
+          <li
+            className={`nav-item ${location.pathname === "/" ? "active" : ""}`}
+          >
             <Link className="nav-link" to="/">
               Home
             </Link>
           </li>
-          <li className="nav-item">
+          <li
+            className={`nav-item ${
+              location.pathname === "/about" ? "active" : ""
+            }`}
+          >
             <Link className="nav-link" to="/about">
               About
             </Link>
