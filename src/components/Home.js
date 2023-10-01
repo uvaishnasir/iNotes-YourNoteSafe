@@ -1,9 +1,12 @@
-import React from "react";
-
+import Notes from "./Notes";
 const Home = () => {
   return (
-    <div>
-      <h1>This is Home.</h1>
+    <div className="container">
+      <div className="container my-3">
+        <h2>Add a Note</h2>
+        <form action=""></form>
+      </div>
+      <Notes />
     </div>
   );
 };
