@@ -4,17 +4,17 @@ import noteContext from "../contexts/notes/noteContext";
 const NewNote = () => {
   const context = useContext(noteContext);
   const { addNote } = context;
-  const [note, seNote] = useState({ title: "", description: "", tag: "" });
+  const [note, setNote] = useState({ title: "", description: "", tag: "" });
 
   const onchange = (e) => {
-    seNote({ ...note, [e.target.name]: e.target.value });
+    setNote({ ...note, [e.target.name]: e.target.value });
   };
   const handleClick = (e) => {
     e.preventDefault();
     addNote(note.title, note.description, note.tag);
   };
   return (
-    <div classname="container my-3">
+    <div className="container my-3">
       <h2>Add a Note</h2>
       <form>
         <div className="mb-3">

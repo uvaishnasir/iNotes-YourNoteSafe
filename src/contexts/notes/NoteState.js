@@ -4,7 +4,7 @@ import NoteContext from "./noteContext";
 const NoteState = (props) => {
   const initiaNotes = [
     {
-      _id: "6517e6fd72308bced876c66",
+      _id: "651ed876c66",
       user: "65102e3136774446ffe0ea42",
       title: "This is my first note",
       description: "Note from the inotebook.",
@@ -20,7 +20,7 @@ const NoteState = (props) => {
     //to do API CALL.
     console.log("adding a new note.......");
     const note = {
-      _id: "6517e6fd72308bced876c6",
+      _id: "651ed876c6",
       user: "65102e3136774446ffe0ea42",
       title: title,
       description: description,
@@ -31,10 +31,16 @@ const NoteState = (props) => {
     setNotes(notes.concat(note));
   };
 
-  //delete note
-  const deleteNote = () => {};
+  //delete note operation.
+  const deleteNote = (id) => {
+    console.log("Deleting a note......");
+    const newN = notes.filter((note) => {
+      return note._id !== id;
+    });
+    setNotes(newN);
+  };
 
-  // edit note
+  // edit note operation.
   const editNote = () => {};
 
   return (
