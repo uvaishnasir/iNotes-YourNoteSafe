@@ -1,7 +1,7 @@
 const About = () => {
   return (
     <div>
-      <h1>1. Introduction</h1>
+      <h1>iNotes - Your Note is Secure with Cloud.</h1>
       <p>
         The iNotes MERN App is a web-based application designed to help users
         organize and manage their notes efficiently. It provides a user-friendly
@@ -9,7 +9,7 @@ const About = () => {
         MERN (MongoDB, Express.js, React.js, Node.js) stack, ensuring a smooth
         and seamless experience.
       </p>
-      <h1>2. Features</h1>
+      <h1>Features</h1>
       <p>
         User Authentication: Secure user authentication system using JWT (JSON
         Web Tokens). Create Notes: Users can create new notes with a title,
@@ -21,7 +21,7 @@ const About = () => {
         designed to be accessible on various devices, including desktops,
         tablets, and mobile phones.
       </p>
-      <h1>3. Technologies</h1>
+      <h1>Technologies</h1>
       <h4>Frontend:</h4>
       <p>React.js Redux (for state management) HTML5, CSS3, JavaScript</p>
       <h4>Backend:</h4>
