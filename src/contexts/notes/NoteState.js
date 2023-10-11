@@ -33,15 +33,14 @@ const NoteState = (props) => {
       },
       body: JSON.stringify({ title, description, tag }),
     });
-    console.log("adding a new note.......");
-    const result = await response.json();
-    console.log(result);
+    const note = await response.json();
+    setNotes(notes.concat(note));
   };
 
   //delete note operation.
   const deleteNote = async (id) => {
-    console.log("Deleting a note......");
     const url = `http://localhost:5000/api/notes/deletenote/${id}`;
+    // eslint-disable-next-line
     const response = await fetch(url, {
       method: "DELETE",
       headers: {
@@ -50,16 +49,15 @@ const NoteState = (props) => {
           "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjUyMzA2NWRmNmU2ODZjNDVhZmUzMTc5In0sImlhdCI6MTY5Njc5NDI2NX0.q47Atd8XGcUCykKnTSC69OfrgNAFFE6FhIwuVEWNz-o",
       },
     });
-    const res = await response.json();
-    console.log(res);
+    const newNotes = notes.filter((note) => { return note._id !== id })
+    setNotes(newNotes);
   };
 
   // edit note operation.
   const editNote = async (id, title, description, tag) => {
-
     //api call
-    console.log("Editing a note......");
     const url = `http://localhost:5000/api/notes/updatenote/${id}`;
+    // eslint-disable-next-line
     const response = await fetch(url, {
       method: "PUT",
       headers: {
@@ -69,8 +67,18 @@ const NoteState = (props) => {
       },
       body: JSON.stringify({ title, description, tag }),
     });
-    const res = await response.json();
-    console.log(res);
+
+    //client site editing code.
+    let newN = JSON.parse(JSON.stringify(notes));
+    for (let i = 0; i < newN.length; i++) {
+      if (newN[i]._id === id) {
+        newN[i].title = title;
+        newN[i].description = description;
+        newN[i].tag = tag;
+        break;
+      }
+    }
+    setNotes(newN);
   };
 
   return (
