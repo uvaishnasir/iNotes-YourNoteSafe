@@ -1,5 +1,5 @@
 1. Introduction
-The iNotebook MERN App is a web-based application designed to help users organize and manage their notes efficiently.
+The iNotes MERN App is a web-based application designed to help users organize and manage their notes efficiently.
 It provides a user-friendly interface to create, edit, and delete notes. The app is built using the MERN (MongoDB, Express.js, React.js, Node.js) stack, ensuring a smooth and seamless experience.
 
 3. Features
