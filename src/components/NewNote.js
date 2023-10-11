@@ -12,6 +12,7 @@ const NewNote = () => {
   const handleClick = (e) => {
     e.preventDefault();
     addNote(note.title, note.description, note.tag);
+    setNote({ title: "", description: "", tag: "" });
   };
   return (
     <div className="container my-3">
@@ -27,6 +28,7 @@ const NewNote = () => {
             className="form-control"
             id="title"
             onChange={onchange}
+            value={note.title}
           />
         </div>
         <div className="mb-3">
@@ -39,6 +41,7 @@ const NewNote = () => {
             className="form-control"
             id="description"
             onChange={onchange}
+            value={note.description}
           />
         </div>
         <div className="mb-3">
@@ -51,9 +54,15 @@ const NewNote = () => {
             className="form-control"
             id="tag"
             onChange={onchange}
+            value={note.tag}
           />
         </div>
-        <button disabled={note.title.length < 5 || note.description.length < 5} type="submit" className="btn btn-primary" onClick={handleClick}>
+        <button
+          disabled={note.title.length < 5 || note.description.length < 5}
+          type="submit"
+          className="btn btn-primary"
+          onClick={handleClick}
+        >
           Add Note
         </button>
       </form>
