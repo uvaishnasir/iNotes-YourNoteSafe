@@ -18,7 +18,7 @@ const Navbar = () => {
       >
         <span className="navbar-toggler-icon" />
       </button>
-      <div className="collapse navbar-collapse" id="navbarSupportedContent">
+      <div className="collapse navbar-collapse d-flex justify-content-between" id="navbarSupportedContent">
         <ul className="navbar-nav mr-auto">
           <li
             className={`nav-item ${location.pathname === "/" ? "active" : ""}`}
@@ -38,6 +38,8 @@ const Navbar = () => {
           </li>
         </ul>
       </div>
+        <Link to="/login" role="button" className="btn btn-primary mx-2 px-5">Login</Link>
+        <Link to="/signup" role="button"  className="btn btn-primary mx-2 px-5">Sign up</Link>
     </nav>
   );
 };
