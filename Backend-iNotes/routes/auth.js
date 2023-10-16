@@ -17,18 +17,21 @@ router.post(
     }),
   ],
   async (req, res) => {
+    let success = false;
     const errors = validationResult(req); //if errors-> return bad request.
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      success = false;
+      return res.status(400).json({ success, errors: errors.array() });
     }
     //check user with this email is exist or not.
     try {
       let user = await User.findOne({ email: req.body.email });
       // console.log(user);
       if (user) {
+        success = false;
         return res
           .status(400)
-          .json({ error: "Sorry, This email already exist" });
+          .json({ success, error: "Sorry, This email already exist" });
       }
       const salt = await bcrypt.genSalt(10);
       const securedPass = await bcrypt.hash(req.body.password, salt);
@@ -43,7 +46,8 @@ router.post(
         },
       };
       const authToken = jwt.sign(data, "IamTHE$007");
-      res.json({ authToken });
+      success = true;
+      res.json({ success, authToken });
     } catch (e) {
       console.error(e.message);
       res.status(500).send("Internal Server Error");
@@ -61,22 +65,26 @@ router.post(
   ],
   async (req, res) => {
     const errors = validationResult(req); //if errors-> return bad request.
+    let success = false;
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      success = false;
+      return res.status(400).json({ success, errors: errors.array() });
     }
     const { email, password } = req.body;
     try {
       let user = await User.findOne({ email });
       if (!user) {
+        success = false;
         return res
           .status(400)
-          .json({ error: "Please login with correct credentials" });
+          .json({ success, error: "Please login with correct credentials" });
       }
       const passCompare = await bcrypt.compare(password, user.password);
       if (!passCompare) {
+        success = false;
         return res
           .status(400)
-          .json({ error: "Please login with correct credentials" });
+          .json({ success, error: "Please login with correct credentials" });
       }
       const data = {
         user: {
@@ -84,14 +92,14 @@ router.post(
         },
       };
       const authToken = jwt.sign(data, "IamTHE$007");
-      res.json({ authToken });
+      success = true;
+      res.json({ success, authToken });
     } catch (e) {
       console.error(e.message);
       res.status(500).send("Internal Server Error");
     }
   }
 );
-
 
 // Route 3
 //get the user using -POST-- "api/auth/getuser". login required.

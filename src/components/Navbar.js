@@ -39,7 +39,7 @@ const Navbar = () => {
         </ul>
       </div>
         <Link to="/login" role="button" className="btn btn-primary mx-2 px-5">Login</Link>
-        <Link to="/signup" role="button"  className="btn btn-primary mx-2 px-5">Sign up</Link>
+        <Link to="/signup" role="button"  className="btn btn-primary mx-2 px-5">Sign Up</Link>
     </nav>
   );
 };
