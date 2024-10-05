@@ -47,10 +47,10 @@ router.post(
       };
       const authToken = jwt.sign(data, "IamTHE$007");
       success = true;
-      res.json({ success, authToken });
+      return res.json({ success, authToken });
     } catch (e) {
       console.error(e.message);
-      res.status(500).send("Internal Server Error");
+      return res.status(500).send("Internal Server Error");
     }
   }
 );
@@ -93,10 +93,10 @@ router.post(
       };
       const authToken = jwt.sign(data, "IamTHE$007");
       success = true;
-      res.json({ success, authToken });
+      return res.json({ success, authToken });
     } catch (e) {
       console.error(e.message);
-      res.status(500).send("Internal Server Error");
+      return res.status(500).send("Internal Server Error");
     }
   }
 );
@@ -108,10 +108,10 @@ router.post("/getuser", fetchUser, async (req, res) => {
   try {
     const userid = req.user.id;
     const user = await User.findById(userid).select("-password");
-    res.send(user);
+    return res.send(user);
   } catch (e) {
     console.error(e.message);
-    res.status(500).send("Internal Server Error");
+    return res.status(500).send("Internal Server Error");
   }
 });
 

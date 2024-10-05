@@ -16,12 +16,11 @@ const Login = () => {
       body: JSON.stringify({ email, password }),
     });
     const user = await response.json();
-    console.log(user);
     if (user.success) {
-      //save token
-      localStorage.setItem("token", user.authtoken);
+      //save token in local storage
+      localStorage.setItem("token", user.authToken);
       navigate("/");
-    } else alert("invalid credentials");
+    } else alert("Invalid Credentials!");
   };
   return (
     <div className="form-container">
