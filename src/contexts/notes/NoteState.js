@@ -79,9 +79,21 @@ const NoteState = (props) => {
     setNotes(newN);
   };
 
+  const updateNotesOrder = (reorderedNotes) => {
+    setNotes(reorderedNotes);
+  };
+
   return (
     <NoteContext.Provider
-      value={{ notes, setNotes, addNote, editNote, deleteNote, fetchAll }}
+      value={{
+        notes,
+        setNotes,
+        addNote,
+        editNote,
+        deleteNote,
+        fetchAll,
+        updateNotesOrder,
+      }}
     >
       {props.children}
     </NoteContext.Provider>

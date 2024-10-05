@@ -1,19 +1,19 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import noteContext from "../contexts/notes/noteContext";
 import NoteItem from "./NoteItem";
-import NewNote from "./NewNote";
 import { useNavigate } from "react-router-dom";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 const Notes = () => {
   const context = useContext(noteContext);
-  const { notes, fetchAll, editNote } = context;
+  const { notes, fetchAll, editNote, updateNotesOrder } = context;
   const navigate = useNavigate();
+
   useEffect(() => {
     if (localStorage.getItem("token")) {
       fetchAll();
     } else navigate("/login");
-    //eslint-disable-next-line
-  }, []);
+  }, [fetchAll, navigate]);
 
   const ref = useRef(null);
   const refClose = useRef(null);
@@ -32,14 +32,38 @@ const Notes = () => {
   const onchange = (e) => {
     setNote({ ...note, [e.target.name]: e.target.value });
   };
+
   const handleClick = (e) => {
     e.preventDefault();
     editNote(note.id, note.t, note.d, note.tg);
     refClose.current.click();
   };
+
+  // Handle drag end
+  // const onDragEnd = async (result) => {
+  //   console.log(result);
+  //   if (!result.destination) return;
+
+  //   const reorderedNotes = Array.from(notes);
+  //   const [removed] = reorderedNotes.splice(result.source.index, 1);
+  //   reorderedNotes.splice(result.destination.index, 0, removed);
+
+  //   console.log(reorderedNotes);
+  //   updateNotesOrder(reorderedNotes); // Update the local state
+
+  //   // Call API to update the order in the database
+  //   await fetch("http://localhost:5000/api/notes/updateOrder", {
+  //     method: "PUT",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //       "auth-token": localStorage.getItem("token"),
+  //     },
+  //     body: JSON.stringify({ orderedNotes: reorderedNotes }),
+  //   });
+  // };
+
   return (
     <>
-      <NewNote />
       <div>
         <button
           ref={ref}
@@ -48,6 +72,7 @@ const Notes = () => {
           data-bs-toggle="modal"
           data-bs-target="#exampleModal"
         ></button>
+        {/* Modal for editing notes */}
         <div
           className="modal fade"
           id="exampleModal"
@@ -128,21 +153,115 @@ const Notes = () => {
         </div>
       </div>
       <h2 className="my-3">Your Notes</h2>
-      <div className="row">
-        <div className="container">
-          {notes.length === 0
-            ? "Nothing to display. Please! add a note"
-            : notes.map((note) => {
-                return (
-                  <NoteItem
-                    key={note._id}
-                    updateNote={updateNote}
-                    note={note}
-                  />
-                );
-              })}
-        </div>
-      </div>
+      {/* <DragDropContext
+        onDragStart={() => {
+          document.body.style.overflow = "hidden"; // Disable scrolling during drag
+        }}
+        onDragEnd={async (result) => {
+          document.body.style.overflow = "auto"; // Re-enable scrolling after drop
+
+          // Handle drag end logic
+          if (!result.destination) return;
+
+          const reorderedNotes = Array.from(notes);
+          const [removed] = reorderedNotes.splice(result.source.index, 1);
+          reorderedNotes.splice(result.destination.index, 0, removed);
+
+          updateNotesOrder(reorderedNotes);
+
+          // Call API to update the order in the database
+          await fetch("http://localhost:5000/api/notes/updateOrder", {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              "auth-token": localStorage.getItem("token"),
+            },
+            body: JSON.stringify({ orderedNotes: reorderedNotes }),
+          });
+        }}
+      >
+        <Droppable droppableId="droppable-notes">
+          {(provided) => (
+            // Only apply d-flex and flex-wrap to the container holding Draggable items
+            <div
+              className="d-flex flex-wrap"
+              style={{ gap: "20px" }} // Define space between items
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+            >
+              {notes.map((note, index) => (
+                <Draggable key={note._id} draggableId={note._id} index={index}>
+                  {(provided) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                    >
+                      <NoteItem updateNote={updateNote} note={note} />
+                    </div>
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext> */}
+      <DragDropContext
+        onDragStart={() => {
+          document.body.style.overflow = "hidden"; // Disable scrolling during drag
+        }}
+        onDragEnd={async (result) => {
+          // Re-enable scrolling after drop
+          document.body.style.overflow = "auto";
+          window.scrollTo(0, 0); // Ensure the scroll position stays at the top
+
+          // Prevent unintended scroll behavior
+          if (!result.destination) return;
+
+          const reorderedNotes = Array.from(notes);
+          const [removed] = reorderedNotes.splice(result.source.index, 1);
+          reorderedNotes.splice(result.destination.index, 0, removed);
+
+          updateNotesOrder(reorderedNotes);
+
+          // Call API to update the order in the database
+          await fetch("http://localhost:5000/api/notes/updateOrder", {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              "auth-token": localStorage.getItem("token"),
+            },
+            body: JSON.stringify({ orderedNotes: reorderedNotes }),
+          });
+        }}
+      >
+        <Droppable droppableId="droppable-notes">
+          {(provided) => (
+            <div
+              className="d-flex flex-wrap"
+              style={{ gap: "20px" }} // Space between items
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+            >
+              {notes.map((note, index) => (
+                <Draggable key={note._id} draggableId={note._id} index={index}>
+                  {(provided) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                    >
+                      <NoteItem updateNote={updateNote} note={note} />
+                    </div>
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
     </>
   );
 };
