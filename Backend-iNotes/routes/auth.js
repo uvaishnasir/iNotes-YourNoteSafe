@@ -47,7 +47,7 @@ router.post(
       };
       const authToken = jwt.sign(data, "IamTHE$007");
       success = true;
-      return res.json({ success, authToken });
+      return res.json({ success, authToken,user});
     } catch (e) {
       console.error(e.message);
       return res.status(500).send("Internal Server Error");
@@ -93,7 +93,7 @@ router.post(
       };
       const authToken = jwt.sign(data, "IamTHE$007");
       success = true;
-      return res.json({ success, authToken });
+      return res.json({ success, authToken, user});
     } catch (e) {
       console.error(e.message);
       return res.status(500).send("Internal Server Error");

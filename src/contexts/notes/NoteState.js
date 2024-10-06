@@ -16,7 +16,13 @@ const NoteState = (props) => {
       }
     );
     const result = await response.json();
-    setNotes(result);
+    if (!result.success) {
+      //clear localStorage.
+      alert(result.message);
+      localStorage.removeItem("token");
+      localStorage.removeItem("name");
+    }
+    setNotes(result.notes);
   };
 
   //add note operation.

@@ -2,14 +2,24 @@ const express = require("express");
 const fetchUser = require("../middleware/fetchUser");
 const router = express.Router();
 const Notes = require("../models/Notes");
+const User = require("../models/User");
 const { body, validationResult } = require("express-validator");
 
 // Route 1--READ
-//fetch all notes using -GET-- "api/notes/fetchnotes". login required.
+//fetch all notes using -GET-- "api/notes/fetchallnotes". login required.
 router.get("/fetchallnotes", fetchUser, async (req, res) => {
   try {
+    const user = await User.findOne({ _id: req.user.id });
+    if (!user) {
+      await Notes.deleteMany({ user: req.user.id });
+      return res.json({
+        success: false,
+        message: "User not found in the database",
+      });
+    }
+
     const notes = await Notes.find({ user: req.user.id });
-    res.send(notes);
+    res.json({ success: true, notes });
   } catch (e) {
     console.error(e.message);
     res.status(500).send("Internal Server Error");

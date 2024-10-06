@@ -15,10 +15,11 @@ const Login = () => {
       },
       body: JSON.stringify({ email, password }),
     });
-    const user = await response.json();
-    if (user.success) {
-      //save token in local storage
-      localStorage.setItem("token", user.authToken);
+    const data = await response.json();
+    if (data?.success) {
+      //save token and name in local storage
+      localStorage.setItem("token", data?.authToken);
+      localStorage.setItem("name", data?.user?.name);
       navigate("/");
     } else alert("Invalid Credentials!");
   };

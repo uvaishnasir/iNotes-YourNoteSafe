@@ -1,32 +1,32 @@
-import { Link } from "react-router-dom";
-import { useLocation,useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useLocation, useNavigate, Link } from "react-router-dom";
+
 const Navbar = () => {
   let location = useLocation();
   const navigate = useNavigate();
+  const [userName, setUserName] = useState("");
   let loggedUser = false;
   if (localStorage.getItem("token")) {
     loggedUser = true;
   }
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("name");
+    setUserName("");
     navigate("/login");
   };
+
+  useEffect(() => {
+    if (localStorage.getItem("name") && loggedUser) {
+      setUserName(localStorage.getItem("name"));
+    }
+  }, [loggedUser]);
+
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
       <Link className="navbar-brand mx-3" to="/">
         iNotes
       </Link>
-      <button
-        className="navbar-toggler"
-        type="button"
-        data-toggle="collapse"
-        data-target="/navbarSupportedContent"
-        aria-controls="navbarSupportedContent"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
-        <span className="navbar-toggler-icon" />
-      </button>
       <div
         className="collapse navbar-collapse d-flex justify-content-between"
         id="navbarSupportedContent"
@@ -50,10 +50,9 @@ const Navbar = () => {
           </li>
         </ul>
       </div>
-      {/* <Link to="/login" role="button" className="btn btn-primary mx-2 px-5">Login</Link>
-        <Link to="/signup" role="button"  className="btn btn-primary mx-2 px-5">Sign Up</Link> */}
+      <span className="text-light mx-2">{userName}</span>
       {loggedUser ? (
-        <button onClick={handleLogout} className="btn btn-primary mx-2 px-5">
+        <button onClick={handleLogout} className="btn btn-danger mx-2 px-5">
           Logout
         </button>
       ) : (

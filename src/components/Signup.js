@@ -18,12 +18,12 @@ const Signup = () => {
       body: JSON.stringify({ email, name, password }),
     });
     const user = await response.json();
-    console.log(user);
-    if (user.success) {
-      //save token
-      localStorage.setItem("token", user.authtoken);
+    if (user?.success) {
+      //save token and user name
+      localStorage.setItem("token", user?.authToken);
+      localStorage.setItem("name", user?.user?.name);
       navigate("/");
-    } else alert("Invalid credentials");
+    } else alert("Invalid user credentials.");
   };
 
   return (
